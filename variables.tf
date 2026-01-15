@@ -12,10 +12,12 @@ variable "app_env" {
 }
 
 variable "aws_access_key" {
+  type    = string
   default = ""
 }
 
 variable "aws_secret_key" {
+  type    = string
   default = ""
 }
 
@@ -50,6 +52,7 @@ variable "root_device_name" {
 }
 
 variable "aws_region" {
+  type    = string
   default = "us-east-1"
 }
 
@@ -105,31 +108,37 @@ variable "ebs_mount_point" {
 }
 
 variable "ebs_vol_id" {
+  type        = string
   default     = ""
   description = "EBS volume ID"
 }
 
 variable "ebs_mkfs_label" {
+  type        = string
   default     = "Data"
   description = "Filesystem label"
 }
 
 variable "ebs_mkfs_labelflag" {
+  type        = string
   default     = "-L"
   description = "Flag to specify before the label name on the mkfs command"
 }
 
 variable "ebs_mkfs_extraopts" {
+  type        = string
   default     = ""
   description = "Extra options for the mkfs command"
 }
 
 variable "ebs_mountopts" {
+  type        = string
   default     = "defaults,noatime"
   description = "Mount options to include in /etc/fstab"
 }
 
 variable "ebs_fs_type" {
+  type        = string
   default     = "ext4"
   description = "Filesystem type"
 }
