@@ -1,5 +1,7 @@
-output "output_name" {
-  value       = var.variable_name
-  description = "description of the output"
-  sensitive   = true
+output "launch_template_id" {
+  value = aws_launch_template.asg_lt.id
+}
+
+output "auto_scaling_group_id" {
+  value = aws_autoscaling_group.asg.id
 }
