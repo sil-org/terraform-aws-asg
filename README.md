@@ -26,7 +26,6 @@ module "this" {
   private_subnet_ids      = [module.vpc.private_subnet_ids]
   default_sg_id           = module.vpc.vpc_default_sg_id
   ecs_instance_profile_id = module.ecs.ecs_instance_profile_id
-  ecs_instance_role_arn   = module.ecs.ecs_instance_role_arn
   ecs_cluster_name        = module.ecs.ecs_cluster_name
   additional_user_data    = "yum install -y something-interesting"
   ebs_device              = "/dev/sdh"

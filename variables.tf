@@ -58,12 +58,6 @@ variable "ecs_instance_profile_id" {
   type = string
 }
 
-variable "ecs_instance_role_arn" {
-  description = "ARN of the IAM role associated with the ECS instance profile (required when ebs_device is set)"
-  type        = string
-  default     = ""
-}
-
 variable "ecs_cluster_name" {
   type = string
 }
