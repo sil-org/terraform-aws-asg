@@ -11,8 +11,6 @@ locals {
     ecs_cluster_name     = var.ecs_cluster_name
     additional_user_data = var.additional_user_data
     aws_region           = var.aws_region
-    aws_access_key       = var.aws_access_key
-    aws_secret_key       = var.aws_secret_key
     ebs_device           = var.ebs_device
     ebs_mount_point      = var.ebs_mount_point
     ebs_vol_id           = var.ebs_vol_id

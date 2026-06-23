@@ -8,16 +8,6 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip -q awscliv2.zip
 ./aws/install
 
-# Configure the AWS CLI
-echo "user_data.sh: Configuring the AWS CLI"
-mkdir ~/.aws
-echo "[default]"               > ~/.aws/config
-echo "region = ${aws_region}" >> ~/.aws/config
-
-echo "[default]"                                  > ~/.aws/credentials
-echo "aws_access_key_id = ${aws_access_key}"     >> ~/.aws/credentials
-echo "aws_secret_access_key = ${aws_secret_key}" >> ~/.aws/credentials
-
 
 # Get my EC2 instance ID
 echo "user_data.sh: Getting EC2 instance ID"
@@ -30,7 +20,7 @@ echo "user_data.sh: EC2 instance ID is $INSTANCE_ID"
 # before attempting to attach it to this EC2 instance.
 echo "user_data.sh Verify EBS volume ${ebs_vol_id} is available"
 while (true) do
-	ATTSTATE=`aws ec2 describe-volumes --volume-ids ${ebs_vol_id} --query "Volumes[0].Attachments[0].{attstate:State}" | grep attstate | sed -e 's/.* "//' -e 's/"//'`
+	ATTSTATE=`aws ec2 describe-volumes --region ${aws_region} --volume-ids ${ebs_vol_id} --query "Volumes[0].Attachments[0].{attstate:State}" | grep attstate | sed -e 's/.* "//' -e 's/"//'`
 	if [[ "$ATTSTATE" == "" ]]; then
 		break;
 	else
@@ -41,13 +31,13 @@ done
 
 # Attach the EBS volume
 echo "user_data.sh: Attaching EBS volume ${ebs_vol_id} as device ${ebs_device}"
-aws ec2 attach-volume --device ${ebs_device} --instance-id $INSTANCE_ID --volume-id ${ebs_vol_id}
+aws ec2 attach-volume --region ${aws_region} --device ${ebs_device} --instance-id $INSTANCE_ID --volume-id ${ebs_vol_id}
 
 # Wait until volume's attachment state is "attached" and volume's state is "in-use"
 # We'll sit in a loop until we get both states returned.
 while (true) do
-	ATTSTATE=`aws ec2 describe-volumes --volume-ids ${ebs_vol_id} --query "Volumes[0].Attachments[0].{attstate:State}" | grep attstate | sed -e 's/.* "//' -e 's/"//'`
-	VOLSTATE=`aws ec2 describe-volumes --volume-ids ${ebs_vol_id} --query "Volumes[*].{volstate:State}" | grep volstate | sed -e 's/.* "//' -e 's/"//'`
+	ATTSTATE=`aws ec2 describe-volumes --region ${aws_region} --volume-ids ${ebs_vol_id} --query "Volumes[0].Attachments[0].{attstate:State}" | grep attstate | sed -e 's/.* "//' -e 's/"//'`
+	VOLSTATE=`aws ec2 describe-volumes --region ${aws_region} --volume-ids ${ebs_vol_id} --query "Volumes[*].{volstate:State}" | grep volstate | sed -e 's/.* "//' -e 's/"//'`
         if [[ "$ATTSTATE" =~ attached ]] && [[ "$VOLSTATE" =~ in-use ]]; then
                 break;
         else
