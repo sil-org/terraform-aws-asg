@@ -14,8 +14,8 @@ module "full" {
 
   app_name                       = ""
   app_env                        = ""
-  aws_access_key                 = ""
-  aws_secret_key                 = ""
+  aws_access_key_id              = ""
+  aws_secret_access_key          = ""
   ami_id                         = ""
   associate_public_ip_address    = false
   aws_instance                   = {}

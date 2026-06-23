@@ -8,19 +8,19 @@ locals {
   })
 
   user_data_ebs = templatefile("${path.module}/user-data-ebs.sh", {
-    ecs_cluster_name     = var.ecs_cluster_name
-    additional_user_data = var.additional_user_data
-    aws_region           = var.aws_region
-    aws_access_key       = var.aws_access_key
-    aws_secret_key       = var.aws_secret_key
-    ebs_device           = var.ebs_device
-    ebs_mount_point      = var.ebs_mount_point
-    ebs_vol_id           = var.ebs_vol_id
-    ebs_mkfs_label       = var.ebs_mkfs_label
-    ebs_mkfs_labelflag   = var.ebs_mkfs_labelflag
-    ebs_mkfs_extraopts   = var.ebs_mkfs_extraopts
-    ebs_fs_type          = var.ebs_fs_type
-    ebs_mountopts        = var.ebs_mountopts
+    ecs_cluster_name      = var.ecs_cluster_name
+    additional_user_data  = var.additional_user_data
+    aws_region            = var.aws_region
+    aws_access_key_id     = var.aws_access_key_id
+    aws_secret_access_key = var.aws_secret_access_key
+    ebs_device            = var.ebs_device
+    ebs_mount_point       = var.ebs_mount_point
+    ebs_vol_id            = var.ebs_vol_id
+    ebs_mkfs_label        = var.ebs_mkfs_label
+    ebs_mkfs_labelflag    = var.ebs_mkfs_labelflag
+    ebs_mkfs_extraopts    = var.ebs_mkfs_extraopts
+    ebs_fs_type           = var.ebs_fs_type
+    ebs_mountopts         = var.ebs_mountopts
   })
 
   credits = var.cpu_credits == "" ? [] : [var.cpu_credits]
