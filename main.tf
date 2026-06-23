@@ -25,6 +25,30 @@ locals {
 }
 
 /*
+ * IAM policy for EBS volume attachment (conditional on ebs_device)
+ */
+data "aws_iam_policy_document" "ebs_attach_policy" {
+  count = var.ebs_device == "" ? 0 : 1
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:AttachVolume",
+      "ec2:DescribeVolumes"
+    ]
+    resources = var.ebs_volume_arns
+  }
+}
+
+resource "aws_iam_policy" "ebs_attach_policy" {
+  count = var.ebs_device == "" ? 0 : 1
+
+  name        = "policy-${var.app_name}-${var.app_env}-ebs-attach"
+  description = "Policy to allow EBS volume attachment for ${var.app_name}-${var.app_env}"
+  policy      = data.aws_iam_policy_document.ebs_attach_policy[0].json
+}
+
+/*
  * Create Launch Template
  */
 resource "aws_launch_template" "asg_lt" {

@@ -23,8 +23,6 @@ module "this" {
   ami_id                  = module.ecs.ami_id
   aws_instance            = var.aws_instance
   aws_region              = var.aws_region
-  aws_access_key          = var.aws_access_key
-  aws_secret_key          = var.aws_secret_key
   private_subnet_ids      = [module.vpc.private_subnet_ids]
   default_sg_id           = module.vpc.vpc_default_sg_id
   ecs_instance_profile_id = module.ecs.ecs_instance_profile_id
@@ -35,6 +33,7 @@ module "this" {
   ebs_vol_id              = aws_ebs_volume.bigvol.id
   ebs_mkfs_label          = "MyBigFS"
   ebs_mkfs_extraopts      = "-m 2 -i 32768"
+  ebs_volume_arns         = [aws_ebs_volume.bigvol.arn]
 
   tags = {
     foo = bar
