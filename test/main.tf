@@ -14,8 +14,6 @@ module "full" {
 
   app_name                       = ""
   app_env                        = ""
-  aws_access_key                 = ""
-  aws_secret_key                 = ""
   ami_id                         = ""
   associate_public_ip_address    = false
   aws_instance                   = {}
@@ -33,6 +31,7 @@ module "full" {
   ebs_device                     = ""
   ebs_mount_point                = ""
   ebs_vol_id                     = ""
+  ebs_volume_arn                 = ""
   ebs_mkfs_label                 = ""
   ebs_mkfs_labelflag             = ""
   ebs_mkfs_extraopts             = ""

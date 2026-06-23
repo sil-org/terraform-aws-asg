@@ -61,7 +61,6 @@ resource "aws_iam_role_policy_attachment" "ebs_attach_policy" {
   role       = data.aws_iam_instance_profile.ecs.role_name
   policy_arn = aws_iam_policy.ebs_attach_policy[0].arn
 }
-}
 
 /*
  * Create Launch Template
