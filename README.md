@@ -26,6 +26,7 @@ module "this" {
   private_subnet_ids      = [module.vpc.private_subnet_ids]
   default_sg_id           = module.vpc.vpc_default_sg_id
   ecs_instance_profile_id = module.ecs.ecs_instance_profile_id
+  ecs_instance_role_arn   = module.ecs.ecs_instance_role_arn
   ecs_cluster_name        = module.ecs.ecs_cluster_name
   additional_user_data    = "yum install -y something-interesting"
   ebs_device              = "/dev/sdh"
@@ -33,7 +34,7 @@ module "this" {
   ebs_vol_id              = aws_ebs_volume.bigvol.id
   ebs_mkfs_label          = "MyBigFS"
   ebs_mkfs_extraopts      = "-m 2 -i 32768"
-  ebs_volume_arns         = [aws_ebs_volume.bigvol.arn]
+  ebs_volume_arn          = aws_ebs_volume.bigvol.arn
 
   tags = {
     foo = bar
