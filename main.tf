@@ -25,13 +25,15 @@ locals {
 }
 
 /*
- * IAM policy for EBS volume attachment (conditional on ebs_device)
+ * Lookup instance profile to get the role name for policy attachment
  */
 data "aws_iam_instance_profile" "ecs" {
-  count = var.ebs_device == "" ? 0 : 1
-  name  = var.ecs_instance_profile_id
+  name = var.ecs_instance_profile_id
 }
 
+/*
+ * IAM policy for EBS volume attachment (conditional on ebs_device)
+ */
 data "aws_iam_policy_document" "ebs_attach_policy" {
   count = var.ebs_device == "" ? 0 : 1
 
@@ -56,8 +58,9 @@ resource "aws_iam_policy" "ebs_attach_policy" {
 resource "aws_iam_role_policy_attachment" "ebs_attach_policy" {
   count = var.ebs_device == "" ? 0 : 1
 
-  role       = data.aws_iam_instance_profile.ecs[0].role
+  role       = data.aws_iam_instance_profile.ecs.role_name
   policy_arn = aws_iam_policy.ebs_attach_policy[0].arn
+}
 }
 
 /*
