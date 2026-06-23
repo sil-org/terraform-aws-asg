@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "ebs_attach_policy" {
       "ec2:AttachVolume",
       "ec2:DescribeVolumes"
     ]
-    resources = var.ebs_volume_arns
+    resources = [var.ebs_volume_arn]
   }
 }
 
@@ -46,6 +46,13 @@ resource "aws_iam_policy" "ebs_attach_policy" {
   name        = "policy-${var.app_name}-${var.app_env}-ebs-attach"
   description = "Policy to allow EBS volume attachment for ${var.app_name}-${var.app_env}"
   policy      = data.aws_iam_policy_document.ebs_attach_policy[0].json
+}
+
+resource "aws_iam_role_policy_attachment" "ebs_attach_policy" {
+  count = var.ebs_device == "" ? 0 : 1
+
+  role       = element(split("/", var.ecs_instance_role_arn), length(split("/", var.ecs_instance_role_arn)) - 1)
+  policy_arn = aws_iam_policy.ebs_attach_policy[0].arn
 }
 
 /*

@@ -58,6 +58,12 @@ variable "ecs_instance_profile_id" {
   type = string
 }
 
+variable "ecs_instance_role_arn" {
+  description = "ARN of the IAM role associated with the ECS instance profile (required when ebs_device is set)"
+  type        = string
+  default     = ""
+}
+
 variable "ecs_cluster_name" {
   type = string
 }
@@ -133,10 +139,10 @@ variable "ebs_fs_type" {
   description = "Filesystem type"
 }
 
-variable "ebs_volume_arns" {
-  description = "List of EBS volume ARNs to grant permissions for attachment and description"
-  type        = list(string)
-  default     = ["*"]
+variable "ebs_volume_arn" {
+  description = "ARN of the EBS volume to grant permissions for attachment and description"
+  type        = string
+  default     = "*"
 }
 
 variable "enable_ec2_detailed_monitoring" {
