@@ -23,8 +23,8 @@ module "this" {
   ami_id                  = module.ecs.ami_id
   aws_instance            = var.aws_instance
   aws_region              = var.aws_region
-  aws_access_key_id          = var.aws_access_key_id
-  aws_secret_access_key          = var.aws_secret_access_key
+  aws_access_key_id       = var.aws_access_key_id
+  aws_secret_access_key   = var.aws_secret_access_key
   private_subnet_ids      = [module.vpc.private_subnet_ids]
   default_sg_id           = module.vpc.vpc_default_sg_id
   ecs_instance_profile_id = module.ecs.ecs_instance_profile_id
