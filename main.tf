@@ -66,6 +66,12 @@ data "aws_iam_policy_document" "ebs_attach_policy" {
     effect    = "Allow"
     actions   = ["ec2:DescribeVolumes"]
     resources = ["*"]
+
+    condition {
+      test     = "StringEquals"
+      values   = [var.aws_region]
+      variable = "aws:RequestedRegion"
+    }
   }
 }
 
