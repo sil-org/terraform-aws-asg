@@ -2,6 +2,8 @@
  * Generate user_data from template file
  */
 locals {
+  aws_account = data.aws_caller_identity.this.account_id
+
   user_data = templatefile("${path.module}/user-data.sh", {
     ecs_cluster_name     = var.ecs_cluster_name
     additional_user_data = var.additional_user_data
@@ -24,6 +26,8 @@ locals {
   credits = var.cpu_credits == "" ? [] : [var.cpu_credits]
 }
 
+data "aws_caller_identity" "this" {}
+
 /*
  * Lookup instance profile to get the role name for policy attachment
  */
@@ -38,12 +42,27 @@ data "aws_iam_policy_document" "ebs_attach_policy" {
   count = var.ebs_device == "" ? 0 : 1
 
   statement {
+    sid       = "AllowVolumeTargeting"
     effect    = "Allow"
     actions   = ["ec2:AttachVolume"]
     resources = [var.ebs_volume_arn]
   }
 
   statement {
+    sid       = "AllowAttachmentToSelfOnly"
+    effect    = "Allow"
+    actions   = ["ec2:AttachVolume"]
+    resources = ["arn:aws:ec2:${var.aws_region}:${local.aws_account}:instance/*"]
+
+    condition {
+      test     = "ArnEquals"
+      values   = [data.aws_iam_instance_profile.ecs.arn]
+      variable = "ec2:InstanceProfile"
+    }
+  }
+
+  statement {
+    sid       = "AllowDescribeVolumes"
     effect    = "Allow"
     actions   = ["ec2:DescribeVolumes"]
     resources = ["*"]
