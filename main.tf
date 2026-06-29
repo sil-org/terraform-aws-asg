@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "ebs_attach_policy" {
   }
 
   statement {
-    sid       = "AllowAttachmentToSelfOnly"
+    sid       = "AllowAttachmentToInstanceProfileOnly"
     effect    = "Allow"
     actions   = ["ec2:AttachVolume"]
     resources = ["arn:aws:ec2:${var.aws_region}:${local.aws_account}:instance/*"]
