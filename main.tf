@@ -11,8 +11,6 @@ locals {
     ecs_cluster_name     = var.ecs_cluster_name
     additional_user_data = var.additional_user_data
     aws_region           = var.aws_region
-    aws_access_key       = var.aws_access_key
-    aws_secret_key       = var.aws_secret_key
     ebs_device           = var.ebs_device
     ebs_mount_point      = var.ebs_mount_point
     ebs_vol_id           = var.ebs_vol_id
@@ -24,6 +22,44 @@ locals {
   })
 
   credits = var.cpu_credits == "" ? [] : [var.cpu_credits]
+}
+
+/*
+ * Lookup instance profile to get the role name for policy attachment
+ */
+data "aws_iam_instance_profile" "ecs" {
+  name = var.ecs_instance_profile_id
+}
+
+/*
+ * IAM policy for EBS volume attachment (conditional on ebs_device)
+ */
+data "aws_iam_policy_document" "ebs_attach_policy" {
+  count = var.ebs_device == "" ? 0 : 1
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:AttachVolume",
+      "ec2:DescribeVolumes"
+    ]
+    resources = [var.ebs_volume_arn]
+  }
+}
+
+resource "aws_iam_policy" "ebs_attach_policy" {
+  count = var.ebs_device == "" ? 0 : 1
+
+  name        = "policy-${var.app_name}-${var.app_env}-ebs-attach"
+  description = "Policy to allow EBS volume attachment for ${var.app_name}-${var.app_env}"
+  policy      = data.aws_iam_policy_document.ebs_attach_policy[0].json
+}
+
+resource "aws_iam_role_policy_attachment" "ebs_attach_policy" {
+  count = var.ebs_device == "" ? 0 : 1
+
+  role       = data.aws_iam_instance_profile.ecs.role_name
+  policy_arn = aws_iam_policy.ebs_attach_policy[0].arn
 }
 
 /*

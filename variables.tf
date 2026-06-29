@@ -11,16 +11,6 @@ variable "app_env" {
   default = "testing"
 }
 
-variable "aws_access_key" {
-  type    = string
-  default = ""
-}
-
-variable "aws_secret_key" {
-  type    = string
-  default = ""
-}
-
 variable "ami_id" {
   type = string
 }
@@ -141,6 +131,12 @@ variable "ebs_fs_type" {
   type        = string
   default     = "ext4"
   description = "Filesystem type"
+}
+
+variable "ebs_volume_arn" {
+  description = "ARN of the EBS volume to grant permissions for attachment and description"
+  type        = string
+  default     = "*"
 }
 
 variable "enable_ec2_detailed_monitoring" {

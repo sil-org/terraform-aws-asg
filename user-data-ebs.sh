@@ -8,16 +8,8 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip -q awscliv2.zip
 ./aws/install
 
-# Configure the AWS CLI
-echo "user_data.sh: Configuring the AWS CLI"
-mkdir ~/.aws
-echo "[default]"               > ~/.aws/config
-echo "region = ${aws_region}" >> ~/.aws/config
-
-echo "[default]"                                  > ~/.aws/credentials
-echo "aws_access_key_id = ${aws_access_key}"     >> ~/.aws/credentials
-echo "aws_secret_access_key = ${aws_secret_key}" >> ~/.aws/credentials
-
+# Set AWS region for AWS CLI
+export AWS_REGION=${aws_region}
 
 # Get my EC2 instance ID
 echo "user_data.sh: Getting EC2 instance ID"
