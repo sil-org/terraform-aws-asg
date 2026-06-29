@@ -35,6 +35,17 @@ data "aws_iam_instance_profile" "ecs" {
   name = var.ecs_instance_profile_id
 }
 
+data "aws_ebs_volume" "volume" {
+  count = var.ebs_device == "" ? 0 : 1
+
+  most_recent = true
+
+  filter {
+    name   = "volume-id"
+    values = [var.ebs_vol_id]
+  }
+}
+
 /*
  * IAM policy for EBS volume attachment (conditional on ebs_device)
  */
@@ -45,7 +56,7 @@ data "aws_iam_policy_document" "ebs_attach_policy" {
     sid       = "AllowVolumeTargeting"
     effect    = "Allow"
     actions   = ["ec2:AttachVolume"]
-    resources = [var.ebs_volume_arn]
+    resources = [data.aws_ebs_volume.volume[0].arn]
   }
 
   statement {
@@ -70,7 +81,7 @@ data "aws_iam_policy_document" "ebs_attach_policy" {
     condition {
       test     = "StringEquals"
       values   = [var.aws_region]
-      variable = "aws:RequestedRegion"
+      variable = "ec2:Region"
     }
   }
 }

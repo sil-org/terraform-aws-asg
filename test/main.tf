@@ -31,7 +31,6 @@ module "full" {
   ebs_device                     = ""
   ebs_mount_point                = ""
   ebs_vol_id                     = ""
-  ebs_volume_arn                 = ""
   ebs_mkfs_label                 = ""
   ebs_mkfs_labelflag             = ""
   ebs_mkfs_extraopts             = ""
