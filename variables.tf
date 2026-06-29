@@ -133,12 +133,6 @@ variable "ebs_fs_type" {
   description = "Filesystem type"
 }
 
-variable "ebs_volume_arn" {
-  description = "ARN of the EBS volume to grant permissions for attachment and description"
-  type        = string
-  default     = "*"
-}
-
 variable "enable_ec2_detailed_monitoring" {
   description = "Enables/disables detailed monitoring for EC2 instances"
   type        = bool

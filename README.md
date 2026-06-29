@@ -33,7 +33,6 @@ module "this" {
   ebs_vol_id              = aws_ebs_volume.bigvol.id
   ebs_mkfs_label          = "MyBigFS"
   ebs_mkfs_extraopts      = "-m 2 -i 32768"
-  ebs_volume_arn          = aws_ebs_volume.bigvol.arn
 
   tags = {
     foo = bar
