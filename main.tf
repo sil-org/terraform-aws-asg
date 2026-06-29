@@ -62,7 +62,7 @@ resource "aws_iam_role_policy_attachment" "ebs_attach_policy" {
   count = var.ebs_device == "" ? 0 : 1
 
   role       = data.aws_iam_instance_profile.ecs.role_name
-  policy_arn = len(aws_iam_policy.ebs_attach_policy) > 0 ? aws_iam_policy.ebs_attach_policy[0].arn : ""
+  policy_arn = aws_iam_policy.ebs_attach_policy[0].arn
 }
 
 /*
