@@ -38,12 +38,15 @@ data "aws_iam_policy_document" "ebs_attach_policy" {
   count = var.ebs_device == "" ? 0 : 1
 
   statement {
-    effect = "Allow"
-    actions = [
-      "ec2:AttachVolume",
-      "ec2:DescribeVolumes"
-    ]
+    effect    = "Allow"
+    actions   = ["ec2:AttachVolume"]
     resources = [var.ebs_volume_arn]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["ec2:DescribeVolumes"]
+    resources = ["*"]
   }
 }
 
@@ -59,7 +62,7 @@ resource "aws_iam_role_policy_attachment" "ebs_attach_policy" {
   count = var.ebs_device == "" ? 0 : 1
 
   role       = data.aws_iam_instance_profile.ecs.role_name
-  policy_arn = aws_iam_policy.ebs_attach_policy[0].arn
+  policy_arn = len(aws_iam_policy.ebs_attach_policy) > 0 ? aws_iam_policy.ebs_attach_policy[0].arn : ""
 }
 
 /*
