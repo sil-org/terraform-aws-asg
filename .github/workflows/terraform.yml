@@ -8,6 +8,6 @@ jobs:
   build:
     uses: sil-org/workflows/.github/workflows/terraform.yml@main
     with:
-      # validate with the earliest version allowed by required_version in versions.tf
-      terraform-version: '~> 1.0'
+      # validate with the earliest minor version allowed by required_version in versions.tf
+      terraform-version: '~> 1.0.0'
       test-dir: 'test'
