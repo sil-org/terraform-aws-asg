@@ -20,17 +20,17 @@ echo "user_data.sh: Getting EC2 instance ID"
 IMDS_TOKEN=""
 for _ in 1 2 3 4 5; do
 	IMDS_TOKEN=$(curl -sS -f -m 2 -X PUT "http://169.254.169.254/latest/api/token" \
-		-H "X-aws-ec2-metadata-token-ttl-seconds: ${IMDS_TOKEN_TTL_SECONDS}") && break
+		-H "X-aws-ec2-metadata-token-ttl-seconds: $${IMDS_TOKEN_TTL_SECONDS}") && break
 	sleep 1
 done
-if [ -z "${IMDS_TOKEN}" ]; then
+if [ -z "$${IMDS_TOKEN}" ]; then
 	echo "user_data.sh: ERROR: Unable to retrieve IMDSv2 token"
 	exit 1
 fi
 
-INSTANCE_ID=$(curl -sS -f -m 2 -H "X-aws-ec2-metadata-token: ${IMDS_TOKEN}" \
+INSTANCE_ID=$(curl -sS -f -m 2 -H "X-aws-ec2-metadata-token: $${IMDS_TOKEN}" \
 	http://169.254.169.254/latest/meta-data/instance-id)
-if [ -z "${INSTANCE_ID}" ]; then
+if [ -z "$${INSTANCE_ID}" ]; then
 	echo "user_data.sh: ERROR: Unable to retrieve instance-id from IMDSv2"
 	exit 1
 fi
@@ -97,7 +97,7 @@ while (true) do
 	fi
 	echo "user_data.sh: Mount failed; retrying"
 	sleep 2
-	if [ $(($(date +%s) - START_TS)) -ge "${MOUNT_RETRY_TIMEOUT_SECONDS}" ]; then
+	if [ $(($(date +%s) - START_TS)) -ge "$${MOUNT_RETRY_TIMEOUT_SECONDS}" ]; then
 		echo "user_data.sh: ERROR: Timed out retrying mount"
 		exit 1
 	fi
