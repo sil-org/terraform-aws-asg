@@ -143,6 +143,10 @@ resource "aws_launch_template" "asg_lt" {
     enabled = var.enable_ec2_detailed_monitoring
   }
 
+  metadata_options {
+    http_tokens = "required"
+  }
+
   dynamic "tag_specifications" {
     for_each = ["network-interface", "volume"]
     iterator = resource

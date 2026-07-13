@@ -11,9 +11,11 @@ unzip -q awscliv2.zip
 # Set AWS region for AWS CLI
 export AWS_REGION=${aws_region}
 
-# Get my EC2 instance ID
+# Get my EC2 instance ID using IMDSv2
+# 21600s is AWS's max token TTL; a few minutes is plenty for user-data.
 echo "user_data.sh: Getting EC2 instance ID"
-INSTANCE_ID=`ec2-metadata --instance-id | sed -e 's/.* //' | tr -d \\n`
+IMDS_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 300")
+INSTANCE_ID=$(curl -s -H "X-aws-ec2-metadata-token: $IMDS_TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
 echo "user_data.sh: EC2 instance ID is $INSTANCE_ID"
 
 # Verify the EBS volume isn't already attached
