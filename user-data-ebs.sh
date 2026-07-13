@@ -13,27 +13,9 @@ export AWS_REGION=${aws_region}
 
 # Get my EC2 instance ID using IMDSv2
 # 21600s is AWS's max token TTL; a few minutes is plenty for user-data.
-IMDS_TOKEN_TTL_SECONDS=300
-MOUNT_RETRY_TIMEOUT_SECONDS=120
-
 echo "user_data.sh: Getting EC2 instance ID"
-IMDS_TOKEN=""
-for _ in 1 2 3 4 5; do
-	IMDS_TOKEN=$(curl -sS -f -m 2 -X PUT "http://169.254.169.254/latest/api/token" \
-		-H "X-aws-ec2-metadata-token-ttl-seconds: $IMDS_TOKEN_TTL_SECONDS") && break
-	sleep 1
-done
-if [ -z "$IMDS_TOKEN" ]; then
-	echo "user_data.sh: ERROR: Unable to retrieve IMDSv2 token"
-	exit 1
-fi
-
-INSTANCE_ID=$(curl -sS -f -m 2 -H "X-aws-ec2-metadata-token: $IMDS_TOKEN" \
-	http://169.254.169.254/latest/meta-data/instance-id)
-if [ -z "$INSTANCE_ID" ]; then
-	echo "user_data.sh: ERROR: Unable to retrieve instance-id from IMDSv2"
-	exit 1
-fi
+IMDS_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 300")
+INSTANCE_ID=$(curl -s -H "X-aws-ec2-metadata-token: $IMDS_TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
 echo "user_data.sh: EC2 instance ID is $INSTANCE_ID"
 
 # Verify the EBS volume isn't already attached
@@ -90,18 +72,7 @@ fi
 # Mount the EBS volume's file system
 echo "user_data.sh: Mounting file system on EBS volume at ${ebs_mount_point}"
 echo "LABEL=${ebs_mkfs_label} ${ebs_mount_point} ${ebs_fs_type} ${ebs_mountopts} 0 0" >> /etc/fstab
-START_TS=$(date +%s)
-while (true) do
-	if mount -a; then
-		break
-	fi
-	echo "user_data.sh: Mount failed; retrying"
-	sleep 2
-	if [ $(($(date +%s) - START_TS)) -ge "$MOUNT_RETRY_TIMEOUT_SECONDS" ]; then
-		echo "user_data.sh: ERROR: Timed out retrying mount"
-		exit 1
-	fi
-done
+mount -a
 
 # Execute optional command supplied by user.
 echo "user_data.sh: Executing user-supplied additional user data: ${additional_user_data}"
