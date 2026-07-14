@@ -15,6 +15,14 @@ variable "ami_id" {
   type = string
 }
 
+variable "asg_name" {
+  description = <<-EOT
+    Name of the Auto Scaling Group. If not specified, the ASG name will be "asg-$${var.app_name}-$${var.app_env}".
+  EOT
+  type        = string
+  default     = ""
+}
+
 variable "associate_public_ip_address" {
   type    = bool
   default = false
@@ -34,6 +42,12 @@ variable "cpu_credits" {
   description = "One of 'standard', 'unlimited'"
   type        = string
   default     = ""
+}
+
+variable "health_check_grace_period" {
+  description = "Time (in seconds) after an auto scaling group instance comes into service before checking health."
+  type        = number
+  default     = 120
 }
 
 variable "root_device_name" {

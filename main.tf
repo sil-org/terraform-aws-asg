@@ -163,13 +163,13 @@ resource "aws_launch_template" "asg_lt" {
  * Create Auto Scaling Group
  */
 resource "aws_autoscaling_group" "asg" {
-  name                      = "asg-${var.app_name}-${var.app_env}"
+  name                      = coalesce(var.asg_name, "asg-${var.app_name}-${var.app_env}")
   vpc_zone_identifier       = var.private_subnet_ids
   min_size                  = var.aws_instance["instance_count"]
   max_size                  = var.aws_instance["instance_count"]
   desired_capacity          = var.aws_instance["instance_count"]
   health_check_type         = "EC2"
-  health_check_grace_period = "120"
+  health_check_grace_period = var.health_check_grace_period
   default_cooldown          = "30"
 
   launch_template {
