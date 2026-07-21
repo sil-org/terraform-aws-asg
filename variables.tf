@@ -55,7 +55,7 @@ variable "max_size" {
 variable "desired_capacity" {
   description = "Desired number of instances for the autoscaling group."
   type        = number
-  default     = 3
+  default     = null
 }
 
 variable "cpu_credits" {
