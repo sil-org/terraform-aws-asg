@@ -28,14 +28,34 @@ variable "associate_public_ip_address" {
   default = false
 }
 
-variable "aws_instance" {
-  type = map(string)
+variable "instance_type" {
+  description = "Instance type for the launch template used in the autoscaling group"
+  type        = string
+  default     = "t2.micro"
+}
 
-  default = {
-    instance_type  = "t2.micro"
-    volume_size    = "8"
-    instance_count = "3"
-  }
+variable "root_volume_size" {
+  description = "Volume size for the launch template used in the autoscaling group instances"
+  type        = number
+  default     = 8
+}
+
+variable "min_size" {
+  description = "Minimum number of instances for the autoscaling group."
+  type        = number
+  default     = 3
+}
+
+variable "max_size" {
+  description = "Maximum number of instances for the autoscaling group."
+  type        = number
+  default     = 3
+}
+
+variable "desired_capacity" {
+  description = "Desired number of instances for the autoscaling group."
+  type        = number
+  default     = 3
 }
 
 variable "cpu_credits" {
