@@ -157,6 +157,10 @@ resource "aws_launch_template" "asg_lt" {
       tags = var.tags
     }
   }
+
+  lifecycle {
+    ignore_changes = [image_id]
+  }
 }
 
 /*
