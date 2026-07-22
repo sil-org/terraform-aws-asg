@@ -108,7 +108,7 @@ resource "aws_launch_template" "asg_lt" {
   ebs_optimized          = false
   name                   = "lt-${var.app_name}-${var.app_env}"
   image_id               = var.ami_id
-  instance_type          = var.aws_instance["instance_type"]
+  instance_type          = var.instance_type
   key_name               = var.key_name
   update_default_version = true
   user_data              = base64encode(var.ebs_device == "" ? local.user_data : local.user_data_ebs)
@@ -117,7 +117,7 @@ resource "aws_launch_template" "asg_lt" {
     device_name = var.root_device_name
     ebs {
       delete_on_termination = true
-      volume_size           = var.aws_instance["volume_size"]
+      volume_size           = var.root_volume_size
     }
   }
 
@@ -157,19 +157,23 @@ resource "aws_launch_template" "asg_lt" {
       tags = var.tags
     }
   }
+
+  lifecycle {
+    ignore_changes = [image_id]
+  }
 }
 
 /*
  * Create Auto Scaling Group
  */
 resource "aws_autoscaling_group" "asg" {
-  name                      = "asg-${var.app_name}-${var.app_env}"
+  name                      = coalesce(var.asg_name, "asg-${var.app_name}-${var.app_env}")
   vpc_zone_identifier       = var.private_subnet_ids
-  min_size                  = var.aws_instance["instance_count"]
-  max_size                  = var.aws_instance["instance_count"]
-  desired_capacity          = var.aws_instance["instance_count"]
+  min_size                  = var.min_size
+  max_size                  = var.max_size
+  desired_capacity          = var.desired_capacity
   health_check_type         = "EC2"
-  health_check_grace_period = "120"
+  health_check_grace_period = var.health_check_grace_period
   default_cooldown          = "30"
 
   launch_template {

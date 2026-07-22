@@ -16,7 +16,13 @@ module "full" {
   app_env                        = ""
   ami_id                         = ""
   associate_public_ip_address    = false
-  aws_instance                   = {}
+  asg_name                       = ""
+  health_check_grace_period      = 0
+  instance_type                  = ""
+  root_volume_size               = 0
+  min_size                       = 0
+  max_size                       = 0
+  desired_capacity               = 0
   cpu_credits                    = ""
   root_device_name               = ""
   aws_region                     = ""

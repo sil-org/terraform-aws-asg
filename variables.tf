@@ -15,25 +15,59 @@ variable "ami_id" {
   type = string
 }
 
+variable "asg_name" {
+  description = <<-EOT
+    Name of the Auto Scaling Group. If not specified, the ASG name will be "asg-$${var.app_name}-$${var.app_env}".
+  EOT
+  type        = string
+  default     = ""
+}
+
 variable "associate_public_ip_address" {
   type    = bool
   default = false
 }
 
-variable "aws_instance" {
-  type = map(string)
+variable "instance_type" {
+  description = "Instance type for the launch template used in the autoscaling group"
+  type        = string
+  default     = "t2.micro"
+}
 
-  default = {
-    instance_type  = "t2.micro"
-    volume_size    = "8"
-    instance_count = "3"
-  }
+variable "root_volume_size" {
+  description = "Volume size for the launch template used in the autoscaling group instances"
+  type        = number
+  default     = 8
+}
+
+variable "min_size" {
+  description = "Minimum number of instances for the autoscaling group."
+  type        = number
+  default     = 3
+}
+
+variable "max_size" {
+  description = "Maximum number of instances for the autoscaling group."
+  type        = number
+  default     = 3
+}
+
+variable "desired_capacity" {
+  description = "Desired number of instances for the autoscaling group."
+  type        = number
+  default     = null
 }
 
 variable "cpu_credits" {
   description = "One of 'standard', 'unlimited'"
   type        = string
   default     = ""
+}
+
+variable "health_check_grace_period" {
+  description = "Time (in seconds) after an auto scaling group instance comes into service before checking health."
+  type        = number
+  default     = 120
 }
 
 variable "root_device_name" {
